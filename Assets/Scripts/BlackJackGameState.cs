@@ -1,9 +1,12 @@
+using Cardgames;
 using UnityEngine;
 
 public class BlackJackGameState : MonoBehaviour
 {
     //Singleton
     private static BlackJackGameState instance;
+
+    CardDeck cardDeck;
 
     public static BlackJackGameState Instance
     {
@@ -37,7 +40,13 @@ public class BlackJackGameState : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        CardDeck cardDeck = new CardDeck(10071972);
+        int pjb = 11012006;
+        int lob = 11022004;
+        int jab = 10071972;
+
+        int randSeed = jab + lob + pjb;
+
+        cardDeck = new CardDeck(randSeed);
     }
 
     // Update is called once per frame
