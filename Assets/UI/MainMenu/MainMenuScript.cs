@@ -1,6 +1,7 @@
 using Assets.UI.Scripts;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using UnityEngine;
 
 public class MainMenuScript : UIToolkitScript
 {
@@ -23,7 +24,7 @@ public class MainMenuScript : UIToolkitScript
 
     private void HighScoreButton_clicked()
     {
-        SceneManager.LoadScene((int)SceneSelectionIndex.SceneName.HighScoresScene);
+        SceneManager.LoadScene((int)SceneSelectionIndex.HighScoresScene);
     }
 
     private void QuitButton_clicked()
@@ -38,7 +39,7 @@ public class MainMenuScript : UIToolkitScript
 
     private void PlayButton_clicked()
     {
-        SceneManager.LoadScene((int)SceneSelectionIndex.SceneName.BlackJackScene);
+        SceneManager.LoadScene(SceneSelectionIndex.BlackJackScene);
     }
 
     // Update is called once per frame

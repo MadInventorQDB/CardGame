@@ -17,7 +17,7 @@ public class HighScoresScript : UIToolkitScript
 
     private void ExitButton_clicked()
     {
-        SceneManager.LoadScene((int)SceneSelectionIndex.SceneName.MainMenuScene);
+        SceneManager.LoadScene(SceneSelectionIndex.MainMenuScene);
     }
 
     // Update is called once per frame
