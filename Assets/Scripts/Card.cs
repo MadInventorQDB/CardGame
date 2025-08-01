@@ -19,6 +19,25 @@ namespace Cardgames
         readonly int deckNumber;
 
         /// <summary>
+        /// The value of the card with face cards as 10
+        /// </summary>
+        public int BlackJackValue 
+        {
+            get
+            { 
+                return Math.Min(cardValue, 10);
+            }
+        }
+
+        public int Value;
+        {
+            get
+            { 
+                return cardValue;
+            }
+        }
+
+        /// <summary>
         /// Make a number into a card
         /// </summary>
         /// <param name="cardNumber">Take a number and makes a suit ordered card</param>
