@@ -29,12 +29,17 @@ namespace Cardgames
             }
         }
 
-        public int Value;
+        public int Value
         {
             get
             { 
                 return cardValue;
             }
+        }
+
+        public suit Suit
+        {
+            get => cardSuit;
         }
 
         /// <summary>

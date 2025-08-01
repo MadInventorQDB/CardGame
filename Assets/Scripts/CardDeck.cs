@@ -4,36 +4,34 @@ using UnityEngine;
 
 namespace Cardgames
 {
-    public class CardDeck
+    public class CardDeck : Stack<Card>
     {
         private int deckSeed;
-
-        //An ordered list of cards with the 0 index as the top card.
-        private List<Card> cardList;
 
         public CardDeck(int randSeed)
         {
             deckSeed = randSeed;
             UnityEngine.Random.InitState(randSeed);
 
-            //Start with an empty deck
-            cardList = new List<Card>();
-
             List<int> tempList = new List<int>();
-            //We start with a list of 52
-            for (int i = 1; i <= 52; i++)
+            //Make 6 decks that will be mixed
+            for (int i = 0; i < 6; i++)
             {
-                tempList.Add(i);
+                //Each deck is a list of 52
+                for (int j = 1; j <= 52; j++)
+                {
+                    tempList.Add(j);
+                }
             }
             //Pick a random card to add to the deck from
             //the tempList until all cards are placed in the deck
-            for (int i = 0; i < 52; i++)
+            for (int i = 0; i < 312; i++)
             {
                 //int cardIndex = 0;
                 int cardIndex = UnityEngine.Random.Range(0, tempList.Count);
                 int cardNum = tempList[cardIndex];
                 tempList.RemoveAt(cardIndex);
-                cardList.Add(new Card(cardNum));
+                Push(new Card(cardNum));
             }
         }
     }

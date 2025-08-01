@@ -62,6 +62,12 @@ public class BlackJackGameState : MonoBehaviour
         playerHands[0].AddCard(new Card(40));
         playerHands.Add(playerHands[0].Split());
 
+        BlackJackToggleCardsScript bjts = FindAnyObjectByType<BlackJackToggleCardsScript>();
+        while (cardDeck.Count > 0)
+        { 
+            bjts.AddCard(cardDeck.Pop());
+        }
+
     }
 
     // Update is called once per frame

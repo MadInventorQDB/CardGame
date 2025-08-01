@@ -36,6 +36,9 @@ namespace Cardgames
         public CardHand Split()
         {
             CardHand newHand = new CardHand();
+            newHand.AddCard(cardList[1]);
+            cardList.RemoveAt(1);
+            return newHand;
         }
 
         public void ClearHand() => cardList.Clear();
@@ -84,7 +87,7 @@ namespace Cardgames
         {
             Options options = Options.Deal;
 
-            if (Score() == 0)
+            if (Score() == 0 || cardList.Count == 1)
             {
                 return options;
             }

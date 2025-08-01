@@ -1,0 +1,35 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/BlackJack/BlackJackStyle.uss?fileID=7433441132597879392&amp;guid=1bf7f47d812f493418caffc6549de2ae&amp;type=3#BlackJackStyle" />
+    <ui:VisualElement style="flex-grow: 1; height: 10%; width: 100%;">
+        <ui:VisualElement enabled="true" style="flex-grow: 1; justify-content: flex-start; align-content: stretch; flex-direction: row; height: 10%;">
+            <ui:VisualElement name="CardHistoryVisualElement" style="flex-grow: 1; flex-direction: row; width: 50%;">
+                <ui:Button text="Toggle&#10;Cards&#10;&lt;" name="ToggleCardHistoryButton" style="height: 100%;" />
+                <ui:Label style="height: 100%; -unity-text-align: middle-left; background-color: rgb(255, 255, 255); font-size: 25%; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+                <ui:Label style="height: 100%; -unity-text-align: middle-left; background-color: rgb(255, 255, 255); font-size: 25%; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+                <ui:Label style="height: 100%; -unity-text-align: middle-left; background-color: rgb(255, 255, 255); font-size: 25%; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+                <ui:Label style="height: 100%; -unity-text-align: middle-left; background-color: rgb(255, 255, 255); font-size: 25%; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+                <ui:Label style="height: 100%; -unity-text-align: middle-left; background-color: rgb(255, 255, 255); font-size: 25%; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+                <ui:Label style="height: 100%; -unity-text-align: middle-left; background-color: rgb(255, 255, 255); font-size: 25%; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+                <ui:Label style="height: 100%; -unity-text-align: middle-left; background-color: rgb(255, 255, 255); font-size: 25%; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+                <ui:Label style="height: 100%; -unity-text-align: middle-left; background-color: rgb(255, 255, 255); font-size: 25%; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+                <ui:Label style="height: 100%; -unity-text-align: middle-left; background-color: rgb(255, 255, 255); font-size: 25%; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+                <ui:Label style="height: 100%; -unity-text-align: middle-left; background-color: rgb(255, 255, 255); font-size: 25%; -unity-font-definition: url(&quot;project://database/Assets/TextMesh%20Pro/Fonts/LiberationSans.ttf?fileID=12800000&amp;guid=e3265ab4bf004d28a9537516768c1c75&amp;type=3#LiberationSans&quot;);" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; width: 50%; flex-direction: row; justify-content: flex-end;">
+                <ui:Button text="CASH&#10;OUT" name="CashOutButton" style="align-items: flex-end; height: 100%;" />
+                <ui:Label text="2:00" name="TimerLabel" style="font-size: 30px; -unity-text-align: middle-left;" />
+                <ui:Button text="RESTART" name="RestartButton" style="height: 100%;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; height: 75%;" />
+        <ui:VisualElement style="flex-grow: 1; height: 15%; flex-direction: row; align-content: auto; justify-content: center;">
+            <ui:Button text="SPLIT" name="SplitButton" />
+            <ui:Button text="DEAL" name="DealOrHitButton" />
+            <ui:Button text="STAND" name="StandButton" />
+            <ui:Button text="-" name="BetMinusButton" />
+            <ui:Button text="BET" name="BetButton" />
+            <ui:Button text="+" name="BetPlusButton" />
+            <ui:Button text="DOUBLE&#10;DOWN" name="DoubleDownButton" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
