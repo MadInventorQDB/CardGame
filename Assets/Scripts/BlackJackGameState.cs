@@ -55,12 +55,13 @@ public class BlackJackGameState : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        InitializeGameState();
-
         blackJackToggleCardsScript = FindAnyObjectByType<BlackJackToggleCardsScript>();
         blackJackPlayerScript = FindAnyObjectByType<BlackJackPlayerScript>();
 
         blackJackPlayerScript.PlayerActionEvent += BlackJackPlayerScript_PlayerActionEvent;
+
+        InitializeGameState();
+
 
     }
 
@@ -80,8 +81,11 @@ public class BlackJackGameState : MonoBehaviour
         int randSeed = jab + lob + pjb;
 
         cardDeck = new CardDeck(randSeed);
-        playerHands = new List<CardHand>() { new CardHand() };
+        playerHands = new List<CardHand>();
+        playerBets = new List<double>();
         dealerHand = new CardHand();
+
+        UpdateUIFromGameState(CardHand.Options.Deal);
     }
 
     private void BlackJackPlayerScript_PlayerActionEvent(BlackJackPlayerScript.PlayerAction playerAction)
@@ -101,7 +105,6 @@ public class BlackJackGameState : MonoBehaviour
             HandleBetPlus();
         }
 
-
         if (playerAction == BlackJackPlayerScript.PlayerAction.DealOrHit)
         {
             HandleDealOrHit();
@@ -117,8 +120,14 @@ public class BlackJackGameState : MonoBehaviour
             HandleDoubleDown();
         }
 
-
-        UpdateUIFromGameState(playerHands[playerHandIndex].GetOptions());
+        if (playerHands.Count > 0)
+        {
+            UpdateUIFromGameState(playerHands[playerHandIndex].GetOptions());
+        }
+        else
+        {
+            UpdateUIFromGameState(CardHand.Options.Deal);
+        }
     }
 
     private void HandleBetPlus()
@@ -172,32 +181,40 @@ public class BlackJackGameState : MonoBehaviour
     {
         Card card;
 
-        if (playerHands[playerHandIndex].Count > 1)
+        if (playerHands.Count == 0)
         {
-            card = cardDeck.Pop();
-            blackJackToggleCardsScript.AddCard(card);
-            playerHands[playerHandIndex].Add(card);
-        }
+            playerHands.Add(new CardHand());
+            //place the bet
+            playerCash -= currentBet;
+            playerBets.Add(currentBet);
 
-        if (playerHands[playerHandIndex].Count == 0)
-        {
-            card = cardDeck.Pop();
-            blackJackToggleCardsScript.AddCard(card);
-            playerHands[playerHandIndex].Add(card);
-
-            if (dealerHand.Count == 0)
+            if (playerHands[playerHandIndex].Count > 1)
             {
                 card = cardDeck.Pop();
-                blackJackToggleCardsScript.AddCard(card, true);
-                dealerHand.Add(card);
+                blackJackToggleCardsScript.AddCard(card);
+                playerHands[playerHandIndex].Add(card);
             }
-        }
 
-        if (playerHands[playerHandIndex].Count == 1)
-        {
-            card = cardDeck.Pop();
-            blackJackToggleCardsScript.AddCard(card);
-            playerHands[playerHandIndex].Add(card);
+            if (playerHands[playerHandIndex].Count == 0)
+            {
+                card = cardDeck.Pop();
+                blackJackToggleCardsScript.AddCard(card);
+                playerHands[playerHandIndex].Add(card);
+
+                if (dealerHand.Count == 0)
+                {
+                    card = cardDeck.Pop();
+                    blackJackToggleCardsScript.AddCard(card, true);
+                    dealerHand.Add(card);
+                }
+            }
+
+            if (playerHands[playerHandIndex].Count == 1)
+            {
+                card = cardDeck.Pop();
+                blackJackToggleCardsScript.AddCard(card);
+                playerHands[playerHandIndex].Add(card);
+            } 
         }
 
         if (dealerHand.Count == 1)
@@ -205,12 +222,18 @@ public class BlackJackGameState : MonoBehaviour
             card = cardDeck.Pop();
             blackJackToggleCardsScript.AddCard(card);
             dealerHand.Add(card);
+
+            return;
         }
+
+        card = cardDeck.Pop();
+        blackJackToggleCardsScript.AddCard(card);
+        playerHands[playerHandIndex].Add(card);
     }
 
     private void UpdateUIFromGameState(CardHand.Options options)
     {
-        blackJackPlayerScript.UpdateUI(options);
+        blackJackPlayerScript.UpdateUI(options, playerCash, currentBet);
     }
 
     // Update is called once per frame
@@ -223,7 +246,7 @@ public class BlackJackGameState : MonoBehaviour
             FollowDealerRulesForDealerHand();
         }
 
-        if (settleBets = true)
+        if (settleBets == true)
         {
             SettleBetsHandByHand();
         }
@@ -238,6 +261,19 @@ public class BlackJackGameState : MonoBehaviour
             CardHand hand = playerHands[i];
             SettlePlayerVsDealerHand(hand, dealerHand, i);
         }
+
+        ResetRound();
+    }
+
+    private void ResetRound()
+    {
+        //Reset Play state
+        playerHands.Clear();
+        playerBets.Clear();
+        dealersTurn = false;
+        settleBets = false;
+
+        UpdateUIFromGameState(CardHand.Options.Deal);
     }
 
     private void SettlePlayerVsDealerHand(CardHand hand, CardHand dealerHand, int betIndex)

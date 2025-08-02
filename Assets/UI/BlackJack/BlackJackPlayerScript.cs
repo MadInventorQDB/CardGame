@@ -26,6 +26,8 @@ public class BlackJackPlayerScript : UIToolkitScript
     private Button betButton;
     private Button betPlusButton;
     private Button doubleDownButton;
+    private DoubleField cashDoubleField;
+    private DoubleField betDoubleField;
 
 
     public event Action<PlayerAction> PlayerActionEvent; 
@@ -41,6 +43,10 @@ public class BlackJackPlayerScript : UIToolkitScript
         betPlusButton = root.Q<Button>("BetPlusButton");
         doubleDownButton = root.Q<Button>("DoubleDownButton");
 
+        cashDoubleField = root.Q<DoubleField>("CashDoubleField");
+        betDoubleField = root.Q<DoubleField>("BetDoubleField");
+
+
         splitButton.clicked += SplitButton_clicked;
         dealOrHitButton.clicked += DealOrHitButton_clicked;
         standButton.clicked += StandButton_clicked;
@@ -48,6 +54,10 @@ public class BlackJackPlayerScript : UIToolkitScript
         betButton.clicked += BetButton_clicked;
         betPlusButton.clicked += BetPlusButton_clicked;
         doubleDownButton.clicked += DoubleDownButton_clicked;
+
+
+        //TODO clean up later😆
+        betButton.parent.Remove(betButton);
 
     }
 
@@ -94,12 +104,16 @@ public class BlackJackPlayerScript : UIToolkitScript
     }
 
     //Set the options for the player based on the player hand.
-    internal void UpdateUI(CardHand.Options options)
+    internal void UpdateUI(CardHand.Options options, double cash, double bet)
     {
+        cashDoubleField.value = cash;
+        betDoubleField.value = bet;
+
         if ((options & CardHand.Options.Deal) != 0)
         {
             dealOrHitButton.text = "DEAL";
             betButton.SetEnabled(true);
+            standButton.SetEnabled(false);
         }
         else
         {
@@ -116,6 +130,8 @@ public class BlackJackPlayerScript : UIToolkitScript
         { 
             dealOrHitButton?.SetEnabled(false);
         }
+
+        standButton.SetEnabled(dealOrHitButton.text == "HIT" && dealOrHitButton.enabledInHierarchy);
 
         if ((options & CardHand.Options.Split) != 0)
         {
