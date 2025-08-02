@@ -1,5 +1,6 @@
 using Assets.UI.Scripts;
 using Cardgames;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -32,7 +33,7 @@ public class BlackJackToggleCardsScript : UIToolkitScript
         }
     }
 
-    public void AddCard(Card card)
+    public void AddCard(Card card, bool hide = false)
     {
         //Recycle if we run out labels
         if (labelPool.Count == 0)
@@ -45,7 +46,10 @@ public class BlackJackToggleCardsScript : UIToolkitScript
         Label label = labelPool[0];
         labelPool.RemoveAt(0);
 
-        label.text = card.ToString();
+        label.text = hide ? "X" : card.ToString();
+        label.userData = card.ToString();
+
+
         if (card.Suit == Card.suit.Hearts || card.Suit == Card.suit.Diamonds)
         {
             label.style.color = Color.red;
@@ -81,10 +85,19 @@ public class BlackJackToggleCardsScript : UIToolkitScript
 
     }
 
+    public void RevealDealerCard()
+    {
+        var labels = cardHistoryVisualElement.Children().OfType<Label>().ToList();
+        foreach (var label in labels)
+        {
+            label.text = label.userData.ToString();
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }
 
