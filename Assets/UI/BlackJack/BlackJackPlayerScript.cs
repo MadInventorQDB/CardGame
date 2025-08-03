@@ -16,6 +16,7 @@ public class BlackJackPlayerScript : UIToolkitScript
         BetMinus,
         BetPlus,
         DoubleDown,
+        CashOut,
     }
     
     private Button splitButton;
@@ -26,6 +27,8 @@ public class BlackJackPlayerScript : UIToolkitScript
     private Button doubleDownButton;
     private DoubleField cashDoubleField;
     private DoubleField betDoubleField;
+
+    private Button cashOutButton;
 
 
     public event Action<PlayerAction> PlayerActionEvent;
@@ -43,6 +46,7 @@ public class BlackJackPlayerScript : UIToolkitScript
         cashDoubleField = root.Q<DoubleField>("CashDoubleField");
         betDoubleField = root.Q<DoubleField>("BetDoubleField");
 
+        cashOutButton = root.Q<Button>("CashOutButton");
 
         splitButton.clicked += SplitButton_clicked;
         dealOrHitButton.clicked += DealOrHitButton_clicked;
@@ -51,8 +55,14 @@ public class BlackJackPlayerScript : UIToolkitScript
         betPlusButton.clicked += BetPlusButton_clicked;
         doubleDownButton.clicked += DoubleDownButton_clicked;
 
+        cashOutButton.clicked += CashOutButton_clicked;
 
         //TODO clean up later😆
+    }
+
+    private void CashOutButton_clicked()
+    {
+        PlayerActionEvent?.Invoke(PlayerAction.CashOut);
     }
 
     private void DoubleDownButton_clicked()

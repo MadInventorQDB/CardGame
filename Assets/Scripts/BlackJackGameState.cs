@@ -2,6 +2,7 @@ using Cardgames;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BlackJackGameState : MonoBehaviour
 {
@@ -95,6 +96,11 @@ public class BlackJackGameState : MonoBehaviour
 
     private void BlackJackPlayerScript_PlayerActionEvent(BlackJackPlayerScript.PlayerAction playerAction)
     {
+        if (playerAction == BlackJackPlayerScript.PlayerAction.CashOut)
+        {
+            HandleCashOut();
+        }
+
         if (playerAction == BlackJackPlayerScript.PlayerAction.BetMinus)
         {
             HandleBetMinus();
@@ -143,6 +149,16 @@ public class BlackJackGameState : MonoBehaviour
         {
             UpdateUIFromGameState(CardHand.Options.Deal);
         }
+    }
+
+    private void HandleCashOut()
+    {
+        var currentHighScore = PlayerPrefs.GetFloat("High Score");
+        if (currentHighScore < playerCash)
+        {
+            PlayerPrefs.SetFloat("High Score", (float)playerCash);
+        }
+        SceneManager.LoadScene(SceneSelectionIndex.MainMenuScene);
     }
 
     private void HandleSplit()
