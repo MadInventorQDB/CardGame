@@ -17,6 +17,7 @@ public class BlackJackPlayerScript : UIToolkitScript
         BetPlus,
         DoubleDown,
         CashOut,
+        Restart,
     }
     
     private Button splitButton;
@@ -29,6 +30,10 @@ public class BlackJackPlayerScript : UIToolkitScript
     private DoubleField betDoubleField;
 
     private Button cashOutButton;
+    private Button restartButton;
+
+    private Label timerLabel;
+    private DateTime dateTimeStart;
 
 
     public event Action<PlayerAction> PlayerActionEvent;
@@ -47,6 +52,9 @@ public class BlackJackPlayerScript : UIToolkitScript
         betDoubleField = root.Q<DoubleField>("BetDoubleField");
 
         cashOutButton = root.Q<Button>("CashOutButton");
+        restartButton = root.Q<Button>("RestartButton");
+
+        timerLabel = root.Q<Label>("TimerLabel");
 
         splitButton.clicked += SplitButton_clicked;
         dealOrHitButton.clicked += DealOrHitButton_clicked;
@@ -56,8 +64,15 @@ public class BlackJackPlayerScript : UIToolkitScript
         doubleDownButton.clicked += DoubleDownButton_clicked;
 
         cashOutButton.clicked += CashOutButton_clicked;
+        restartButton.clicked += RestartButton_clicked;
 
+        dateTimeStart = DateTime.Now;
         //TODO clean up later😆
+    }
+
+    private void RestartButton_clicked()
+    {
+        PlayerActionEvent?.Invoke(PlayerAction.Restart);
     }
 
     private void CashOutButton_clicked()
@@ -96,10 +111,17 @@ public class BlackJackPlayerScript : UIToolkitScript
         PlayerActionEvent?.Invoke(PlayerAction.DealOrHit);
     }
 
+    TimeSpan twoMinutes = new TimeSpan(0, 2, 0);
+
     // Update is called once per frame
     void Update()
     {
-        
+        TimeSpan timePassed = DateTime.Now - dateTimeStart;
+        timerLabel.text = (twoMinutes - timePassed).ToString(@"mm\:ss");
+        if (timePassed > twoMinutes)
+        {
+            PlayerActionEvent?.Invoke(PlayerAction.Restart);
+        }
     }
 
     //Set the options for the player based on the player hand.
