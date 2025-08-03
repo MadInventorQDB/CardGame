@@ -433,6 +433,8 @@ GameObject:
   - component: {fileID: 801359156}
   - component: {fileID: 801359158}
   - component: {fileID: 801359159}
+  - component: {fileID: 801359160}
+  - component: {fileID: 801359161}
   m_Layer: 5
   m_Name: BlackJackUI
   m_TagString: Untagged
@@ -496,6 +498,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8744a4790c43f5f4eb484f41bb3ce7d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &801359160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801359155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eec2a49689957324f998aece18338447, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &801359161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 801359155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b47fa1230a284474cae574602ea9c1f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &832575517

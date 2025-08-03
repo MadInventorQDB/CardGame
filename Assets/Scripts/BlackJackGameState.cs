@@ -22,6 +22,8 @@ public class BlackJackGameState : MonoBehaviour
     //UI Elements
     BlackJackToggleCardsScript blackJackToggleCardsScript;
     BlackJackPlayerScript blackJackPlayerScript;
+    DealerHandScript dealerHandScript;
+    PlayerHandsScript playerHandsScript;
 
     public static BlackJackGameState Instance
     {
@@ -57,6 +59,9 @@ public class BlackJackGameState : MonoBehaviour
     {
         blackJackToggleCardsScript = FindAnyObjectByType<BlackJackToggleCardsScript>();
         blackJackPlayerScript = FindAnyObjectByType<BlackJackPlayerScript>();
+        dealerHandScript = FindAnyObjectByType<DealerHandScript>();
+        playerHandsScript = FindAnyObjectByType<PlayerHandsScript>();
+
 
         blackJackPlayerScript.PlayerActionEvent += BlackJackPlayerScript_PlayerActionEvent;
 
@@ -90,11 +95,6 @@ public class BlackJackGameState : MonoBehaviour
 
     private void BlackJackPlayerScript_PlayerActionEvent(BlackJackPlayerScript.PlayerAction playerAction)
     {
-        if (playerAction == BlackJackPlayerScript.PlayerAction.Bet)
-        {
-            HandleBet();
-        }
-
         if (playerAction == BlackJackPlayerScript.PlayerAction.BetMinus)
         {
             HandleBetMinus();
@@ -148,6 +148,7 @@ public class BlackJackGameState : MonoBehaviour
         var card = cardDeck.Pop();
         blackJackToggleCardsScript.AddCard(card);
         playerHands[playerHandIndex].Add(card);
+        playerHandsScript.AddCard(card, playerHandIndex);
 
         HandleStand();
 
@@ -174,6 +175,7 @@ public class BlackJackGameState : MonoBehaviour
             dealersTurn = true;
             //We can reveal the hidden cards.
             blackJackToggleCardsScript.RevealDealerCard();
+            dealerHandScript.RevealDealerCard();
         }
     }
 
@@ -193,6 +195,7 @@ public class BlackJackGameState : MonoBehaviour
                 card = cardDeck.Pop();
                 blackJackToggleCardsScript.AddCard(card);
                 playerHands[playerHandIndex].Add(card);
+                playerHandsScript.AddCard(card, playerHandIndex);
             }
 
             if (playerHands[playerHandIndex].Count == 0)
@@ -200,12 +203,14 @@ public class BlackJackGameState : MonoBehaviour
                 card = cardDeck.Pop();
                 blackJackToggleCardsScript.AddCard(card);
                 playerHands[playerHandIndex].Add(card);
+                playerHandsScript.AddCard(card, playerHandIndex);
 
                 if (dealerHand.Count == 0)
                 {
                     card = cardDeck.Pop();
                     blackJackToggleCardsScript.AddCard(card, true);
                     dealerHand.Add(card);
+                    dealerHandScript.AddCard(card, true); 
                 }
             }
 
@@ -214,6 +219,7 @@ public class BlackJackGameState : MonoBehaviour
                 card = cardDeck.Pop();
                 blackJackToggleCardsScript.AddCard(card);
                 playerHands[playerHandIndex].Add(card);
+                playerHandsScript.AddCard(card, playerHandIndex);
             } 
         }
 
@@ -222,6 +228,7 @@ public class BlackJackGameState : MonoBehaviour
             card = cardDeck.Pop();
             blackJackToggleCardsScript.AddCard(card);
             dealerHand.Add(card);
+            dealerHandScript.AddCard(card);
 
             return;
         }
@@ -229,6 +236,7 @@ public class BlackJackGameState : MonoBehaviour
         card = cardDeck.Pop();
         blackJackToggleCardsScript.AddCard(card);
         playerHands[playerHandIndex].Add(card);
+        playerHandsScript.AddCard(card, playerHandIndex);
     }
 
     private void UpdateUIFromGameState(CardHand.Options options)
@@ -270,6 +278,11 @@ public class BlackJackGameState : MonoBehaviour
         //Reset Play state
         playerHands.Clear();
         playerBets.Clear();
+        playerHandsScript.ClearHands();
+
+        dealerHand.Clear();
+        dealerHandScript.ClearHand();
+
         dealersTurn = false;
         settleBets = false;
 
@@ -335,13 +348,21 @@ public class BlackJackGameState : MonoBehaviour
         { 
             settleBets = true;
         }
-
-        if (dealerHand.Score <= 16)
+        else
         {
-            var card = cardDeck.Pop();
-            blackJackToggleCardsScript.AddCard(card);
-            dealerHand.Add(card);
+            if (dealerHand.Score <= 16)
+            {
+                var card = cardDeck.Pop();
+                blackJackToggleCardsScript.AddCard(card);
+                dealerHand.Add(card);
+                dealerHandScript.AddCard(card);
+            }
+            else
+            {
+                settleBets = true;
+            }
         }
+
     }
 
     private void OnDestroy()

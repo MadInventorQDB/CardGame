@@ -14,7 +14,6 @@ public class BlackJackPlayerScript : UIToolkitScript
         DealOrHit,
         Stand,
         BetMinus,
-        Bet,
         BetPlus,
         DoubleDown,
     }
@@ -23,14 +22,13 @@ public class BlackJackPlayerScript : UIToolkitScript
     private Button dealOrHitButton;
     private Button standButton;
     private Button betMinusButton;
-    private Button betButton;
     private Button betPlusButton;
     private Button doubleDownButton;
     private DoubleField cashDoubleField;
     private DoubleField betDoubleField;
 
 
-    public event Action<PlayerAction> PlayerActionEvent; 
+    public event Action<PlayerAction> PlayerActionEvent;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -39,7 +37,6 @@ public class BlackJackPlayerScript : UIToolkitScript
         dealOrHitButton = root.Q<Button>("DealOrHitButton");
         standButton = root.Q<Button>("StandButton");
         betMinusButton = root.Q<Button>("BetMinusButton");
-        betButton = root.Q<Button>("BetButton");
         betPlusButton = root.Q<Button>("BetPlusButton");
         doubleDownButton = root.Q<Button>("DoubleDownButton");
 
@@ -51,14 +48,11 @@ public class BlackJackPlayerScript : UIToolkitScript
         dealOrHitButton.clicked += DealOrHitButton_clicked;
         standButton.clicked += StandButton_clicked;
         betMinusButton.clicked += BetMinusButton_clicked;
-        betButton.clicked += BetButton_clicked;
         betPlusButton.clicked += BetPlusButton_clicked;
         doubleDownButton.clicked += DoubleDownButton_clicked;
 
 
         //TODO clean up later😆
-        betButton.parent.Remove(betButton);
-
     }
 
     private void DoubleDownButton_clicked()
@@ -69,11 +63,6 @@ public class BlackJackPlayerScript : UIToolkitScript
     private void BetPlusButton_clicked()
     {
         PlayerActionEvent?.Invoke(PlayerAction.BetPlus);
-    }
-
-    private void BetButton_clicked()
-    {
-        PlayerActionEvent?.Invoke(PlayerAction.Bet);
     }
 
     private void BetMinusButton_clicked()
@@ -112,13 +101,15 @@ public class BlackJackPlayerScript : UIToolkitScript
         if ((options & CardHand.Options.Deal) != 0)
         {
             dealOrHitButton.text = "DEAL";
-            betButton.SetEnabled(true);
+            betMinusButton.SetEnabled(true);
+            betPlusButton.SetEnabled(true);
             standButton.SetEnabled(false);
         }
         else
         {
             dealOrHitButton.text = "HIT";
-            betButton.SetEnabled(false);
+            betMinusButton.SetEnabled(false);
+            betPlusButton.SetEnabled(false);
         }
 
         if ((options & CardHand.Options.Deal) != 0 ||
