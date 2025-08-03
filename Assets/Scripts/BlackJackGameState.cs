@@ -101,6 +101,11 @@ public class BlackJackGameState : MonoBehaviour
             HandleCashOut();
         }
 
+        if (playerAction == BlackJackPlayerScript.PlayerAction.Restart)
+        {
+            HandleRestart();
+        }
+
         if (playerAction == BlackJackPlayerScript.PlayerAction.BetMinus)
         {
             HandleBetMinus();
@@ -149,6 +154,11 @@ public class BlackJackGameState : MonoBehaviour
         {
             UpdateUIFromGameState(CardHand.Options.Deal);
         }
+    }
+
+    private void HandleRestart()
+    {
+        SceneManager.LoadScene(SceneSelectionIndex.BlackJackScene);
     }
 
     private void HandleCashOut()
@@ -303,7 +313,7 @@ public class BlackJackGameState : MonoBehaviour
         blackJackToggleCardsScript.AddCard(card);
 
         // If player busts, automatically move to the next state (next hand or dealer's turn).
-        if (playerHands[playerHandIndex].GetOptions() == CardHand.Options.Bust)
+        if ((playerHands[playerHandIndex].GetOptions() & (CardHand.Options.Bust| CardHand.Options.TwentyOne)) > 0)
         {
             HandleStand();
         }
