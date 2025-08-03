@@ -26,6 +26,10 @@ public class BlackJackGameState : MonoBehaviour
     DealerHandScript dealerHandScript;
     PlayerHandsScript playerHandsScript;
 
+    //Audio
+    AudioSource soundFxWin;
+    AudioSource soundFxLose;
+
     public static BlackJackGameState Instance
     {
         get
@@ -63,6 +67,8 @@ public class BlackJackGameState : MonoBehaviour
         dealerHandScript = FindAnyObjectByType<DealerHandScript>();
         playerHandsScript = FindAnyObjectByType<PlayerHandsScript>();
 
+        soundFxWin = GameObject.FindWithTag("SoundFxWin").GetComponent<AudioSource>();
+        soundFxLose = GameObject.FindWithTag("SoundFxLose").GetComponent<AudioSource>();
 
         blackJackPlayerScript.PlayerActionEvent += BlackJackPlayerScript_PlayerActionEvent;
 
@@ -378,6 +384,7 @@ public class BlackJackGameState : MonoBehaviour
     {
         if (hand.GetOptions() == CardHand.Options.Bust)
         {
+            soundFxLose.Play();
             return;
         }
         if ((hand.GetOptions() & CardHand.Options.BlackJack) == CardHand.Options.BlackJack)
@@ -392,7 +399,10 @@ public class BlackJackGameState : MonoBehaviour
             {
                 //BlackJack pays 3 to 2
                 playerCash += playerBets[betIndex] + playerBets[betIndex] * 1.5;
+                soundFxWin.Play();
             }
+
+            return;
         }
 
         if ((hand.GetOptions() &
@@ -403,6 +413,8 @@ public class BlackJackGameState : MonoBehaviour
             {
                 //Winner
                 playerCash += playerBets[betIndex] * 2;
+                soundFxWin.Play();
+                return;
             }
             else
             {
@@ -411,14 +423,19 @@ public class BlackJackGameState : MonoBehaviour
                 if (hand.Score == dealerHand.Score)
                 {
                     playerCash += playerBets[betIndex];
+                    return;
                 }
                 if (hand.Score > dealerHand.Score)
                 {
                     //Winner
                     playerCash += playerBets[betIndex] * 2;
+                    soundFxWin.Play();
                 }
             }
+
         }
+
+        soundFxLose.Play();
     }
 
     private void FollowDealerRulesForDealerHand()

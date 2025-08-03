@@ -22,7 +22,7 @@
                 </ui:VisualElement>
                 <ui:Button text="CASH&#10;OUT" name="CashOutButton" style="align-items: flex-end; height: 100%;" />
                 <ui:Label text="2:00" name="TimerLabel" style="font-size: 30px; -unity-text-align: middle-left;" />
-                <ui:Button text="RESTART" name="RestartButton" style="height: 100%;" />
+                <ui:Button text="∞&#10;RESTART" name="RestartButton" style="height: 100%;" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement style="flex-grow: 1; height: 75%;">
