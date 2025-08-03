@@ -107,7 +107,16 @@ public class BlackJackGameState : MonoBehaviour
 
         if (playerAction == BlackJackPlayerScript.PlayerAction.DealOrHit)
         {
-            HandleDealOrHit();
+            // If no hands exist, it's a "Deal" action for a new round.
+            if (playerHands.Count == 0)
+            {
+                HandleDeal();
+            }
+            else
+            {
+                // Otherwise, it's a "Hit" action for the current hand.
+                HandleHit();
+            }
         }
 
         if (playerAction == BlackJackPlayerScript.PlayerAction.Stand)
@@ -120,6 +129,12 @@ public class BlackJackGameState : MonoBehaviour
             HandleDoubleDown();
         }
 
+        if (playerAction == BlackJackPlayerScript.PlayerAction.Split)
+        {
+            HandleSplit();
+        }
+
+
         if (playerHands.Count > 0)
         {
             UpdateUIFromGameState(playerHands[playerHandIndex].GetOptions());
@@ -127,6 +142,47 @@ public class BlackJackGameState : MonoBehaviour
         else
         {
             UpdateUIFromGameState(CardHand.Options.Deal);
+        }
+    }
+
+    private void HandleSplit()
+    {
+
+        playerCash -= playerBets[playerHandIndex];
+        playerBets.Add(playerBets[playerHandIndex]);
+
+
+        CardHand currentHand = playerHands[playerHandIndex];
+        CardHand newHand = currentHand.Split();
+
+        playerHands.Add(newHand);
+
+        //Replace the split card and update the UI
+        Card cardForFirstHand = cardDeck.Pop();
+        playerHands[playerHandIndex].Add(cardForFirstHand);
+        blackJackToggleCardsScript.AddCard(cardForFirstHand);
+
+        // The new split hand (which also has one card) gets its first new card.
+        Card cardForSecondHand = cardDeck.Pop();
+        playerHands[playerHands.Count - 1].Add(cardForSecondHand);
+        blackJackToggleCardsScript.AddCard(cardForSecondHand);
+
+        //The hands need to be updated
+        playerHandsScript.ClearHands();
+        for (int i = 0; i < playerHands.Count; i++)
+        {
+            CardHand hand = playerHands[i];
+            foreach (var card in hand)
+            {
+                playerHandsScript.AddCard(card, i);
+            }
+        }
+
+        // After splitting, check if the first hand is already a Blackjack.
+        var optionsForFirstHand = playerHands[playerHandIndex].GetOptions();
+        if ((optionsForFirstHand & (CardHand.Options.BlackJack)) != 0)
+        {
+            HandleStand();
         }
     }
 
@@ -142,8 +198,8 @@ public class BlackJackGameState : MonoBehaviour
 
     private void HandleDoubleDown()
     {
-        playerCash -= currentBet;
-        playerBets[playerHandIndex] += currentBet;
+        playerCash -= playerBets[playerHandIndex];
+        playerBets[playerHandIndex] += playerBets[playerHandIndex];
 
         var card = cardDeck.Pop();
         blackJackToggleCardsScript.AddCard(card);
@@ -179,65 +235,64 @@ public class BlackJackGameState : MonoBehaviour
         }
     }
 
-    private void HandleDealOrHit()
+    private void HandleDeal()
     {
-        Card card;
+        // 1. Create the first player hand and place the bet
+        playerHands.Add(new CardHand());
+        playerCash -= currentBet;
+        playerBets.Add(currentBet);
 
-        if (playerHands.Count == 0)
+        // 2. Deal cards in the standard sequence
+        // Player Card 1
+        Card playerCard1 = cardDeck.Pop();
+        playerHands[0].Add(playerCard1);
+        playerHandsScript.AddCard(playerCard1, 0);
+        blackJackToggleCardsScript.AddCard(playerCard1);
+
+        // Dealer Card 1 (hidden)
+        Card dealerCard1 = cardDeck.Pop();
+        dealerHand.Add(dealerCard1);
+        dealerHandScript.AddCard(dealerCard1, true);
+        blackJackToggleCardsScript.AddCard(dealerCard1, true);
+
+        // Player Card 2
+        Card playerCard2 = cardDeck.Pop();
+        playerHands[0].Add(playerCard2);
+        playerHandsScript.AddCard(playerCard2, 0);
+        blackJackToggleCardsScript.AddCard(playerCard2);
+
+        // Dealer Card 2 (visible)
+        Card dealerCard2 = cardDeck.Pop();
+        dealerHand.Add(dealerCard2);
+        dealerHandScript.AddCard(dealerCard2);
+        blackJackToggleCardsScript.AddCard(dealerCard2);
+
+        // 3. Check for immediate Blackjack which would end the player's turn
+        if ((playerHands[0].GetOptions() & CardHand.Options.BlackJack) > 0)
         {
-            playerHands.Add(new CardHand());
-            //place the bet
-            playerCash -= currentBet;
-            playerBets.Add(currentBet);
-
-            if (playerHands[playerHandIndex].Count > 1)
-            {
-                card = cardDeck.Pop();
-                blackJackToggleCardsScript.AddCard(card);
-                playerHands[playerHandIndex].Add(card);
-                playerHandsScript.AddCard(card, playerHandIndex);
-            }
-
-            if (playerHands[playerHandIndex].Count == 0)
-            {
-                card = cardDeck.Pop();
-                blackJackToggleCardsScript.AddCard(card);
-                playerHands[playerHandIndex].Add(card);
-                playerHandsScript.AddCard(card, playerHandIndex);
-
-                if (dealerHand.Count == 0)
-                {
-                    card = cardDeck.Pop();
-                    blackJackToggleCardsScript.AddCard(card, true);
-                    dealerHand.Add(card);
-                    dealerHandScript.AddCard(card, true); 
-                }
-            }
-
-            if (playerHands[playerHandIndex].Count == 1)
-            {
-                card = cardDeck.Pop();
-                blackJackToggleCardsScript.AddCard(card);
-                playerHands[playerHandIndex].Add(card);
-                playerHandsScript.AddCard(card, playerHandIndex);
-            } 
+            // If player gets Blackjack, their turn is over immediately.
+            dealersTurn = true;
+            blackJackToggleCardsScript.RevealDealerCard();
+            dealerHandScript.RevealDealerCard();
         }
-
-        if (dealerHand.Count == 1)
-        {
-            card = cardDeck.Pop();
-            blackJackToggleCardsScript.AddCard(card);
-            dealerHand.Add(card);
-            dealerHandScript.AddCard(card);
-
-            return;
-        }
-
-        card = cardDeck.Pop();
-        blackJackToggleCardsScript.AddCard(card);
-        playerHands[playerHandIndex].Add(card);
-        playerHandsScript.AddCard(card, playerHandIndex);
     }
+
+    private void HandleHit()
+    {
+        Card card = cardDeck.Pop();
+        playerHands[playerHandIndex].Add(card);
+
+        // Update UI
+        playerHandsScript.AddCard(card, playerHandIndex);
+        blackJackToggleCardsScript.AddCard(card);
+
+        // If player busts, automatically move to the next state (next hand or dealer's turn).
+        if (playerHands[playerHandIndex].GetOptions() == CardHand.Options.Bust)
+        {
+            HandleStand();
+        }
+    }
+
 
     private void UpdateUIFromGameState(CardHand.Options options)
     {
@@ -275,17 +330,21 @@ public class BlackJackGameState : MonoBehaviour
 
     private void ResetRound()
     {
-        //Reset Play state
-        playerHands.Clear();
-        playerBets.Clear();
-        playerHandsScript.ClearHands();
-
-        dealerHand.Clear();
-        dealerHandScript.ClearHand();
-
+        // Reset game state variables
+        playerHandIndex = 0;
         dealersTurn = false;
         settleBets = false;
 
+        // Clear the logical data structures for hands and bets
+        playerHands.Clear();
+        playerBets.Clear();
+        dealerHand.Clear();
+
+        // Clear the visual UI elements
+        playerHandsScript.ClearHands();
+        dealerHandScript.ClearHand();
+
+        // Update the UI to show the "Deal" button and bet options
         UpdateUIFromGameState(CardHand.Options.Deal);
     }
 
