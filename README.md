@@ -8,10 +8,10 @@ Play or download the jam submission on itch.io:
 ## Development
 
 - **Engine**: Unity 6000.1.14f1
-- **Jam dates**: July 30 – August 8, 2025
-
+- **Jam dates**: July 30 – August 3, 2025
+- **Jam voting**: August 3 – August 8, 2025
 ## Credits
 
-- Created by Mr. Awesome Bruce
+- Created by Mr. Awesome Bruce, with design help from my kids!
 - Uses casino slot machine sound effects and music by Brian Paul Zimmerman from the Fantasy Music Pack
 
